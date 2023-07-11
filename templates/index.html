@@ -5,9 +5,14 @@
 {% endblock %}
 
 {% block header %}
-    <h1>General Stores inc</h1>
-    <p class = "right-align"> Register <br> Login </p>  
+        <form action="/Register" method="GET" class="right-align">
+            <button type="submit">Register</button>
+        </form>    
+        <form action="/Login" method="GETs" class="right-align">
+            <button type="submit">Login</button>
+        </form>    
 {% endblock %}
 
 {% block body %}
+
 {% endblock %}

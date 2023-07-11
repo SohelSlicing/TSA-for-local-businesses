@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <h2 class = center-align> Login Page </h2>  
+    
+    <h3>Login using an previous account <br> Enter the below details</h3>
+
+    <form action="/Login" method="POST">
+        <label for="phone">Phone Number:</label><br>
+        <input type="text" id="phone" name="phone"><br>
+
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}

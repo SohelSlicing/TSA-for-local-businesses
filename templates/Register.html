@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<h2 class = center-align> Register Page </h2>
+
+<h3>Create an Account <br> Enter the below details</h3>
+
+<form action="/Register" method="POST">
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name"><br>
+
+    <label for="phone">Phone Number:</label><br>
+    <input type="text" id="phone" name="phone"><br>
+
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password"><br>
+
+    <label for="confirm">Confirm Password:</label><br>
+    <input type="password" id="confirm" name="confirm"><br><br>
+
+    <button type="submit">Submit</button>
+</form>
+{% endblock %}
