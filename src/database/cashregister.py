@@ -1,0 +1,55 @@
+import sqlite3
+from datetime import date
+
+class cashRegister:
+    def __init__(self) -> None:
+        self.conn = sqlite3.connect("db.sqlite3")
+        self.c = self.conn.cursor()
+        self.todays_date = date.today()
+
+
+    def enterProduct(self, name: str, type: int, price: float, stock: int):
+        data = [(name, type, price, stock)]
+
+        self.c.executemany("""INSERT INTO product(product_name, product_type, product_price, product_stock)
+                       VALUES(?, ?, ?, ?);""", data)
+        self.conn.commit()
+
+    def recordTransaction(self, customer_name: str, total_amount: float):
+        # Returns the transaction ID of the current transaction. Make sure to pass it to recordSales method
+        
+        data = [(customer_name, self.todays_date, total_amount)]
+
+        self.c.executemany("""INSERT INTO transactions(customer_name, transaction_date, total_amount) 
+                           VALUES(?, ?, ?);""", data)
+        self.conn.commit()
+
+        transactions = self.c.execute("SELECT transaction_id FROM transactions").fetchall()
+        return transactions[-1][0]
+
+    def enterProductType(self, productName: str):
+        data = [(productName)]
+
+        self.c.executemany("""INSERT INTO productTypes(type_label)
+                           VALUES(?);""", (data,))
+        self.conn.commit()
+
+    def recordSales(self, soldproduct: dict, transactionId: int):
+        # Always call this function along with the recordTransaction method only
+
+        data = []
+        for key in soldproduct:
+            data.append((transactionId, self.todays_date, key, soldproduct[key]))
+        
+        self.c.executemany("""INSERT INTO sales(sale_id, sales_date, sold_product_id, quantity) 
+                           VALUES(?, ?, ?, ?);""", data)
+        self.conn.commit()
+
+if __name__ == "__main__":
+    cr = cashRegister()
+    
+    cr.recordSales({1: 2, 2: 2}, cr.recordTransaction("Vidya", 69))
+    cr.conn.close()
+
+
+        
