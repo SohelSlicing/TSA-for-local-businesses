@@ -5,14 +5,16 @@
 {% endblock %}
 
 {% block header %}
-        <form action="/Register" method="GET" class="right-align">
-            <button type="submit">Register</button>
-        </form>    
-        <form action="/Login" method="GETs" class="right-align">
-            <button type="submit">Login</button>
-        </form>    
+    <div class="right-align">
+        <a href="{{ url_for('Register') }}">Register</a>
+        <a href="{{ url_for('Login') }}">Login</a> 
+    </div>
 {% endblock %}
 
 {% block body %}
+
+<div class="right-align">
+    <a href="{{ url_for('admin_panel') }}">Admin Panel</a>
+</div>
 
 {% endblock %}

@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block header %}
+    <div class="right-align">
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+{% endblock %}
+
+{% block body %}
+<h2 class="center-align">Admin Pannel</h2>
+
+<h3>Add new product type</h3>
+<form action="/admin_panel" method="post">
+    <label for="newType">Label for Product type:</label><br>
+    <input type="text" id="newType" name="newType"><br>
+    <button type = "submit">Enter</button>
+</form>
+
+<h3>Add new Products to stock</h3>
+<form action="/admin_panel" method="post">
+    <label for="newProduct">Label of the Product:</label><br>
+    <input type="text" id="productname" name="productname"><br><br>
+
+    {% for i in listoftypes %}
+    <label for="checkbox">{{i[0]}}</label>
+    <input type="checkbox" name="typeprod" value={{i[0]}}><br>
+    {% endfor %}
+    <br><br>
+    <label for="cost">Cost of unit</label><br>
+    <input type="number" name="price"><br><br>
+
+    <label for="stock">Stock of unit</label><br>
+    <input type="number" name="stock"><br><br>
+
+    <button type = "submit">Enter</button>
+</form>
+{% endblock %}

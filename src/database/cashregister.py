@@ -44,11 +44,16 @@ class cashRegister:
         self.c.executemany("""INSERT INTO sales(sale_id, sales_date, sold_product_id, quantity) 
                            VALUES(?, ?, ?, ?);""", data)
         self.conn.commit()
+    
+    def get_product_types(self):
+        labels = self.c.execute("""SELECT type_label FROM productTypes""").fetchall()
+        return labels
 
 if __name__ == "__main__":
     cr = cashRegister()
     
-    cr.recordSales({1: 2, 2: 2}, cr.recordTransaction("Vidya", 69))
+    prod = cr.get_product_types()
+    print(prod)
     cr.conn.close()
 
 

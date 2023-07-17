@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
+from src.database.cashregister import cashRegister
+from src.logger import logging
 
 conn = sqlite3.connect("db.sqlite3", check_same_thread=False)
 c = conn.cursor()
@@ -56,11 +58,47 @@ def Login():
         
         session["user"] = user[0][1]
 
-        return render_template("forecast.html")
+        return redirect(url_for('admin_panel'))
     else:
         if "user" in session:
-            return render_template("forecast.html")
+            return redirect(url_for('admin_panel'))
         return render_template("Login.html")
+
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    return render_template("index.html")
+
+    
+@app.route("/admin_panel", methods = ["POST", "GET"])
+def admin_panel():
+    if "user" in session:
+        user = session["user"]
+        
+        cashregister = cashRegister()
+        prodlist = cashregister.get_product_types()
+
+        if request.method == "POST": 
+
+            if request.form.get("newType"):
+                cashregister.enterProductType(request.form.get("newType"))
+
+            if request.form.get("productname"):
+                prodname = request.form.get("productname")
+                prodtype = request.form.get("typeprod")
+                price = request.form.get("price")
+                stock = request.form.get("stock")
+
+                print(prodname)
+                print(prodtype)
+                print(price)
+                print(stock)
+        
+        return render_template("admin_panel.html", listoftypes = prodlist)
+    
+    else:
+        return render_template("login.html")
+
 
 if __name__ == "__main__":
     app.run(host = "0.0.0.0", debug = True)
