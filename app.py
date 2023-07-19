@@ -89,15 +89,29 @@ def admin_panel():
                 price = request.form.get("price")
                 stock = request.form.get("stock")
 
-                print(prodname)
-                print(prodtype)
-                print(price)
-                print(stock)
+                prodtypeID = cashregister.get_product_id(prodtype)
+
+                cashregister.enterProduct(prodname, prodtypeID, price, stock)
+                
         
         return render_template("admin_panel.html", listoftypes = prodlist)
     
     else:
         return render_template("login.html")
+    
+@app.route("/admin_panel/transactionpage", methods = ["POST", "GET"])
+def cashregister():
+    if "user" in session:
+        user = session["user"]
+
+        cashregister = cashRegister()
+        if request.method == "POST":
+            pass
+
+        return render_template("cashregister.html")
+
+    else:
+        return redirect(url_for('Login'))
 
 
 if __name__ == "__main__":

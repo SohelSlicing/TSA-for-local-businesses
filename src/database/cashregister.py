@@ -48,11 +48,15 @@ class cashRegister:
     def get_product_types(self):
         labels = self.c.execute("""SELECT type_label FROM productTypes""").fetchall()
         return labels
+    
+    def get_product_id(self, product: str):
+        productid = self.c.execute("""SELECT type_id FROM productTypes WHERE type_label = :productid""", {"productid": product}).fetchall()
+        return productid[0][0]
 
 if __name__ == "__main__":
     cr = cashRegister()
     
-    prod = cr.get_product_types()
+    prod = cr.get_product_id("Dairy")
     print(prod)
     cr.conn.close()
 
