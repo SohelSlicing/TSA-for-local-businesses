@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block header %}
+    <a href="{{ url_for('cashregister') }}"> back to transactions page </a>
+{% endblock %}
+
+{% block body %}
+    <h1>add items from {{ param1 }}</h1>
+    <div>
+        <form action="{{ url_for('testtransaction', typeselected = param1) }}" method="post">
+            <select name="products" id="products">
+                {% for id, name in products_list %}
+                <option value="{{id}}">{{name}}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="submit">
+        </form>
+    </div>
+{% endblock %}

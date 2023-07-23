@@ -5,7 +5,15 @@
 {% endblock %}
 
 {% block body %}
+<div>
     <h2 class="center-align">Record transactions</h2>
-
-    
+    <form action="{{ url_for('cashregister') }}" method="post">
+        <select name="prod_type_selector" id="prod_type_selector">
+            {% for id, name in prod_type_nameid %}
+            <option value="{{ id }}">{{name}}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="submit">
+    </form>
+</div>
 {% endblock %}

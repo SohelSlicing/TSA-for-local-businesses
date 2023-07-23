@@ -106,10 +106,23 @@ def cashregister():
 
         cashregister = cashRegister()
         if request.method == "POST":
+            return redirect(url_for("testtransaction", typeselected = request.form.get("prod_type_selector")))
+
+        return render_template("cashregister.html", prod_type_nameid = cashregister.get_prodtypes_idname())
+
+    else:
+        return redirect(url_for('Login'))
+    
+@app.route("/admin_panel/transactionpage/<typeselected>", methods = ["POST", "GET"])
+def testtransaction(typeselected):
+    if "user" in session:
+        user = session["user"]
+        cashr = cashRegister()
+        list_of_products = cashr.get_product_idname(typeselected)
+        if request.method == "POST":
             pass
-
-        return render_template("cashregister.html")
-
+        
+        return render_template("additems.html", param1 = typeselected, products_list = list_of_products)
     else:
         return redirect(url_for('Login'))
 
