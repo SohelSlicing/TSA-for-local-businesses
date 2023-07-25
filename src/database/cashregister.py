@@ -60,12 +60,20 @@ class cashRegister:
     def get_product_idname(self, typeofprod: int):
         prods = self.c.execute("SELECT product_id, product_name FROM product WHERE product_type = :type", {"type" : typeofprod}).fetchall()
         return prods
+    
+    def get_product_price(self, prodId: int)-> float:
+        price = self.c.execute("SELECT product_price FROM product WHERE product_id = :id", {"id" : prodId}).fetchall()
+        return price
 
+    def test(self):
+        bruv = self.c.execute("SELECT transaction_id FROM transactions").fetchall()
+        return bruv
+    
 if __name__ == "__main__":
     cr = cashRegister()
     
-    prod = cr.get_product_idname(3)
-    print(prod)
+    prod = cr.test()
+    print(prod[-1][0])
     cr.conn.close()
 
 

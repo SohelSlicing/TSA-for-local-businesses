@@ -10,6 +10,34 @@ c = conn.cursor()
 app = Flask(__name__)
 app.secret_key = "KVLKCL"
 
+class customerTransaction:
+    def __init__(self, custname: str) -> None:
+        self.customerName = custname
+        self.sales_id = []
+        self.qty = []
+
+    def complete_transaction(self):
+    # get customer name, product IDs, their quantities 
+    # calculate final price fp = product unit costs * qty
+        finalPrice = 0
+        salesdict = {}
+        for i in range(len(self.sales_id)):
+            salesdict[self.sales_id[i]] = self.qty[i]
+
+            unitprice = c.execute("SELECT product_price FROM product WHERE product_id = :id", {"id" : self.sales_id[i]}).fetchall()
+            finalPrice += unitprice[0][0] * self.qty[i]
+
+    # create transaction and get the 
+        cr = cashRegister()
+        lastID = cr.recordTransaction(self.customerName, finalPrice)
+
+    # create sales for all products in the list
+        cr.recordSales(salesdict, lastID)
+        self.sales_id.clear()
+        self.qty.clear()
+
+
+
 @app.route("/", methods = ["GET", "POST"])
 def index():   
     return render_template("index.html")
@@ -99,13 +127,21 @@ def admin_panel():
     else:
         return render_template("login.html")
     
+custtrans = customerTransaction("")
+    
 @app.route("/admin_panel/transactionpage", methods = ["POST", "GET"])
 def cashregister():
     if "user" in session:
         user = session["user"]
 
         cashregister = cashRegister()
+
         if request.method == "POST":
+            if not request.form.get("customerName"):
+                pass
+            else:
+                custtrans.customerName = request.form.get("customerName")
+
             return redirect(url_for("testtransaction", typeselected = request.form.get("prod_type_selector")))
 
         return render_template("cashregister.html", prod_type_nameid = cashregister.get_prodtypes_idname())
@@ -116,16 +152,25 @@ def cashregister():
 @app.route("/admin_panel/transactionpage/<typeselected>", methods = ["POST", "GET"])
 def testtransaction(typeselected):
     if "user" in session:
+
         user = session["user"]
         cashr = cashRegister()
         list_of_products = cashr.get_product_idname(typeselected)
+
         if request.method == "POST":
-            pass
+
+            custtrans.sales_id.append(request.form.get("products"))
+            custtrans.qty.append(int(request.form.get("quantity")))
         
         return render_template("additems.html", param1 = typeselected, products_list = list_of_products)
     else:
         return redirect(url_for('Login'))
-
+    
+@app.route("/completeTransaction")
+def rundb():
+    custtrans.complete_transaction()
+    return redirect(url_for("admin_panel"))
+    
 
 if __name__ == "__main__":
     app.run(host = "0.0.0.0", debug = True)
