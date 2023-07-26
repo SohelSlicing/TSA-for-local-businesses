@@ -50,9 +50,9 @@ class database:
 
 if __name__ == "__main__":
     db = database()
-    #db.create_product_type()
-    #db.create_product()
-    #db.create_transactions()
-    #db.create_sales()
-    db.get_product_types()
+    db.create_user()
+    db.create_product_type()
+    db.create_product()
+    db.create_transactions()
+    db.create_sales()
     db.conn.close()
