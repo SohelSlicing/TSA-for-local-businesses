@@ -57,23 +57,30 @@ class cashRegister:
         types = self.c.execute("""SELECT type_id, type_label FROM productTypes""").fetchall()
         return types
     
-    def get_product_idname(self, typeofprod: int):
-        prods = self.c.execute("SELECT product_id, product_name FROM product WHERE product_type = :type", {"type" : typeofprod}).fetchall()
+    def get_product_idname(self, typeofprod: int = -1):
+        if typeofprod != -1:
+            prods = self.c.execute("SELECT product_id, product_name FROM product WHERE product_type = :type", {"type" : typeofprod}).fetchall()
+        else:
+            prods = self.c.execute("SELECT product_id, product_name FROM product").fetchall()
         return prods
     
     def get_product_price(self, prodId: int)-> float:
         price = self.c.execute("SELECT product_price FROM product WHERE product_id = :id", {"id" : prodId}).fetchall()
         return price
+    
+    def get_sales(self):
+        sales = self.c.execute("SELECT * FROM sales").fetchall()
+        return sales
 
     def test(self):
-        bruv = self.c.execute("SELECT transaction_id FROM transactions").fetchall()
+        bruv = self.c.execute("SELECT * FROM sales").fetchall()
         return bruv
     
 if __name__ == "__main__":
     cr = cashRegister()
     
     prod = cr.test()
-    print(prod[-1][0])
+    print(type(prod[0][1]))
     cr.conn.close()
 
 
