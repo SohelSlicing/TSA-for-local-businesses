@@ -6,6 +6,7 @@ from src.logger import logging
 from src.exception import CustomException
 from src.database.cashregister import cashRegister
 from src.components.data_transformation import DataTransformation
+from src.components.model_trainer import ModelTrainer
 
 from dataclasses import dataclass
 from sklearn.model_selection import train_test_split
@@ -87,7 +88,10 @@ class DataIngestion:
         data_transformation = DataTransformation()
         train_arr, test_arr = data_transformation.initiate_data_transformation(train_df, test_df)
 
-        print(f"Train array: {train_arr}")
+        mt = ModelTrainer()
+        mt.initiate_model_trainer(test_arr, test_arr)
+
+        
         
 if __name__ == "__main__":
     data_ingestion_obj = DataIngestion()
