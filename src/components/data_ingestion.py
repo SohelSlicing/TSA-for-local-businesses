@@ -5,6 +5,7 @@ import csv
 from src.logger import logging
 from src.exception import CustomException
 from src.database.cashregister import cashRegister
+from src.components.data_transformation import DataTransformation
 
 from dataclasses import dataclass
 from sklearn.model_selection import train_test_split
@@ -79,6 +80,17 @@ class DataIngestion:
         except Exception as e:
             raise CustomException(e,sys)
         
+    def test_data_transformation(self):
+        train_df = self.ingestion_config.train_data_path
+        test_df = self.ingestion_config.test_data_path
+
+        data_transformation = DataTransformation()
+        train_arr, test_arr = data_transformation.initiate_data_transformation(train_df, test_df)
+
+        print(f"Train array: {train_arr}")
+        
 if __name__ == "__main__":
     data_ingestion_obj = DataIngestion()
-    train_df, test_df = data_ingestion_obj.initiate_data_ingestion()
+    # train_df, test_df = data_ingestion_obj.initiate_data_ingestion()
+
+    data_ingestion_obj.test_data_transformation()
