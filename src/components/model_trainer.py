@@ -29,7 +29,7 @@ class ModelTrainer:
             )
 
             y_train, y_test = [], []
-            for products in range(1,number_of_products-1):
+            for products in range(1,number_of_products):
                 y_train.append(train_array[:,products].astype(int))
                 y_test.append(test_array[:,products].astype(int))
 
