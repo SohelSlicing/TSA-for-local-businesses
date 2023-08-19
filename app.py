@@ -3,6 +3,7 @@ import sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
 from src.database.cashregister import cashRegister
 from src.logger import logging
+from src.pipelines.forecast_pipeline import ForecastPipeline
 
 conn = sqlite3.connect("db.sqlite3", check_same_thread=False)
 c = conn.cursor()
@@ -171,6 +172,25 @@ def rundb():
     custtrans.complete_transaction()
     return redirect(url_for("admin_panel"))
     
+@app.route("/getforecast", methods = ["POST", "GET"])
+def getforecast():
+    if "user" in session:
+        databaseobj = cashRegister()
+        prods = databaseobj.get_product_idname()
+        if request.method == "POST":
+            product = request.form.get('item')
+            numOfDays = request.form.get('days')
+            
+            forecaster = ForecastPipeline()
+            list_of_forecasts = forecaster.forecast(modelno= product, no_of_days= int(numOfDays))
+            return render_template("forecast.html", productNames = prods, predictions = list_of_forecasts)
+
+        
+        else:
+            return render_template("forecast.html", productNames = prods)
+    
+    else:
+        return redirect(url_for('Login'))
 
 if __name__ == "__main__":
     app.run(host = "0.0.0.0", debug = True)

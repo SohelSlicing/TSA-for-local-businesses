@@ -25,5 +25,5 @@ class ForecastPipeline:
 
 if __name__ == "__main__":
     fp = ForecastPipeline()
-    fp.forecast(modelno=0, no_of_days= 1)
+    print(fp.forecast(modelno= 0, no_of_days= 1))
     print("done")
